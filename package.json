@@ -7,10 +7,10 @@
     "playgrounds/*"
   ],
   "scripts": {
-    "build": "npm -w react-state-context run build",
-    "test": "npm -w react-state-context run test",
-    "test:watch": "npm -w react-state-context run test:watch",
-    "test:coverage": "npm -w react-state-context run test:coverage",
+    "build": "npm -w @javierscode/react-state-context run build",
+    "test": "npm -w @javierscode/react-state-context run test",
+    "test:watch": "npm -w @javierscode/react-state-context run test:watch",
+    "test:coverage": "npm -w @javierscode/react-state-context run test:coverage",
     "format": "prettier --write .",
     "dev:vite": "npm -w vite run dev"
   },
