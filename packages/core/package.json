@@ -1,5 +1,5 @@
 {
-  "name": "react-state-context",
+  "name": "@javierscode/react-state-context",
   "version": "1.0.0",
   "description": "Lightweight React state management with Context API and useSyncExternalStore",
   "type": "module",
