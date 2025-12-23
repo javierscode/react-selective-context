@@ -7,8 +7,10 @@
  * - NaN: correctly handled (NaN === NaN returns true)
  * - Functions: compared by reference
  * - Objects/Arrays: compared by shallow key-value equality
- * - Date, RegExp, Map, Set: compared as objects with no enumerable keys,
- *   so different instances are considered equal unless used as object properties
+ * - Date: compared by timestamp value
+ * - RegExp: compared by source pattern and flags
+ * - Map: compared by shallow key-value equality of entries
+ * - Set: compared by shallow equality of values
  */
 export const shallowEqual = <T>(a: T, b: T): boolean => {
   // Object.is handles:
@@ -24,10 +26,40 @@ export const shallowEqual = <T>(a: T, b: T): boolean => {
     return false
   }
 
-  // At this point, both a and b are objects (including arrays, Date, RegExp, Map, Set)
+  // Handle Date objects - compare by timestamp
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime()
+  }
+
+  // Handle RegExp objects - compare by source and flags
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return a.source === b.source && a.flags === b.flags
+  }
+
+  // Handle Map objects - compare entries shallowly
+  if (a instanceof Map && b instanceof Map) {
+    if (a.size !== b.size) return false
+    for (const [key, value] of a) {
+      if (!b.has(key) || !Object.is(value, b.get(key))) {
+        return false
+      }
+    }
+    return true
+  }
+
+  // Handle Set objects - compare values shallowly
+  if (a instanceof Set && b instanceof Set) {
+    if (a.size !== b.size) return false
+    for (const value of a) {
+      if (!b.has(value)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  // At this point, both a and b are plain objects or arrays
   // We compare their enumerable own properties
-  // Note: Date, RegExp, Map, Set have no enumerable keys, so they'll be considered equal
-  // if they reach this point (different instances with same "empty" keys)
   const keysA = Object.keys(a)
   const keysB = Object.keys(b)
 
