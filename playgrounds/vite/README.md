@@ -10,3 +10,4 @@ An interactive space where you can:
 - 🐛 Debug and reproduce issues
 - 📝 Create usage examples
 - ⚡ Development with Hot Module Replacement (HMR)
+- 🔍 Uses [react-scan](https://github.com/aidenybai/react-scan) to detect re-render and performance issues
