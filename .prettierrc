@@ -4,5 +4,6 @@
   "jsxSingleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "printWidth": 90
+  "printWidth": 90,
+  "plugins": ["prettier-plugin-classnames"]
 }

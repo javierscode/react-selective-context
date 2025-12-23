@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
-    "prettier": "3.7.4"
+    "prettier": "3.7.4",
+    "prettier-plugin-classnames": "0.8.6"
   }
 }
