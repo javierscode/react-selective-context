@@ -1,6 +1,6 @@
 # Vite Playground
 
-A development environment to experiment and test the `@javierscode/react-state-context` library.
+A development environment to experiment and test the `react-selective-context` library.
 
 ## What is this playground?
 

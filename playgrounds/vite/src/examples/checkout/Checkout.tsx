@@ -1,4 +1,4 @@
-import { StateProvider } from '@javierscode/react-state-context'
+import { SelectiveProvider } from 'react-selective-context'
 import { CheckoutContext } from './context'
 import { initialCheckoutState } from './CheckoutState'
 import { StepIndicator } from './StepIndicator'
@@ -10,7 +10,7 @@ import { PromoCode } from './PromoCode'
 
 export function Checkout() {
   return (
-    <StateProvider context={CheckoutContext} initialState={initialCheckoutState}>
+    <SelectiveProvider context={CheckoutContext} initialState={initialCheckoutState}>
       <div
         className='rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6
           backdrop-blur-sm'
@@ -54,6 +54,6 @@ export function Checkout() {
           </div>
         </div>
       </div>
-    </StateProvider>
+    </SelectiveProvider>
   )
 }

@@ -1,11 +1,11 @@
 import {
-  createStateContext,
-  createStateSelector,
-  createStateMutation,
-} from '@javierscode/react-state-context'
+  createSelectiveContext,
+  createContextSelector,
+  createContextSetter,
+} from 'react-selective-context'
 import { TaskBoardState } from './TaskBoardState'
 
-export const TaskBoardContext = createStateContext<TaskBoardState>()
+export const TaskBoardContext = createSelectiveContext<TaskBoardState>()
 
-export const useTaskBoardSelector = createStateSelector(TaskBoardContext)
-export const useTaskBoardMutation = createStateMutation(TaskBoardContext)
+export const useTaskBoardSelector = createContextSelector(TaskBoardContext)
+export const useTaskBoardSetter = createContextSetter(TaskBoardContext)

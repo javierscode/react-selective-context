@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useTaskBoardSelector, useTaskBoardMutation } from './context'
+import { useTaskBoardSelector, useTaskBoardSetter } from './context'
 import { updateFilter, updateSearchQuery } from './TaskBoardState'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 
 export function TaskFilters() {
   const filter = useTaskBoardSelector((state) => state.filter)
   const searchQuery = useTaskBoardSelector((state) => state.searchQuery)
-  const mutate = useTaskBoardMutation()
+  const setTaskBoardState = useTaskBoardSetter()
 
   const [localSearch, setLocalSearch] = useState(searchQuery)
   const debouncedSearchQuery = useDebouncedValue(localSearch, 300)
@@ -14,9 +14,9 @@ export function TaskFilters() {
   // Sincronizar con estado global cuando cambia el debounced
   useEffect(() => {
     if (debouncedSearchQuery !== searchQuery) {
-      mutate(updateSearchQuery(debouncedSearchQuery))
+      setTaskBoardState(updateSearchQuery(debouncedSearchQuery))
     }
-  }, [debouncedSearchQuery, searchQuery, mutate])
+  }, [debouncedSearchQuery, searchQuery, setTaskBoardState])
 
   const filters = [
     { value: 'all', label: 'All' },
@@ -31,7 +31,7 @@ export function TaskFilters() {
         {filters.map((f) => (
           <button
             key={f.value}
-            onClick={() => mutate(updateFilter(f.value))}
+            onClick={() => setTaskBoardState(updateFilter(f.value))}
             className={`rounded px-4 py-2 text-sm font-medium transition-all ${
               filter === f.value
                 ? 'bg-slate-700 text-slate-100'

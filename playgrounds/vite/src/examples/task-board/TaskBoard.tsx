@@ -1,4 +1,4 @@
-import { StateProvider } from '@javierscode/react-state-context'
+import { SelectiveProvider } from 'react-selective-context'
 import { TaskBoardContext } from './context'
 import { initialTaskBoardState } from './TaskBoardState'
 import { TaskStats } from './TaskStats'
@@ -8,7 +8,7 @@ import { AddTaskForm } from './AddTaskForm'
 
 export function TaskBoard() {
   return (
-    <StateProvider context={TaskBoardContext} initialState={initialTaskBoardState}>
+    <SelectiveProvider context={TaskBoardContext} initialState={initialTaskBoardState}>
       <div className='rounded border border-slate-800 bg-slate-900/80 p-6'>
         <div className='mb-6 flex items-center gap-3'>
           <div className='rounded bg-amber-600 p-2'>
@@ -48,6 +48,6 @@ export function TaskBoard() {
           </div>
         </main>
       </div>
-    </StateProvider>
+    </SelectiveProvider>
   )
 }

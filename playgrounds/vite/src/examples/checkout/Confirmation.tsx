@@ -1,5 +1,5 @@
 import { updateStep } from './CheckoutState'
-import { useCheckoutSelector, useCheckoutMutation } from './context'
+import { useCheckoutSelector, useCheckoutSetter } from './context'
 
 export function Confirmation() {
   const step = useCheckoutSelector((state) => state.step)
@@ -7,7 +7,7 @@ export function Confirmation() {
   const shipping = useCheckoutSelector((state) => state.shipping)
   const promoCode = useCheckoutSelector((state) => state.promoCode)
   const promoDiscount = useCheckoutSelector((state) => state.promoDiscount)
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
 
   if (step !== 'confirmation') return null
 
@@ -16,7 +16,7 @@ export function Confirmation() {
   const shippingCost = subtotal > 100 ? 0 : 9.99
   const total = subtotal - discount + shippingCost
 
-  const goBack = () => mutate(updateStep('shipping'))
+  const goBack = () => setCheckoutState(updateStep('shipping'))
 
   const placeOrder = () => alert('🎉 Order placed successfully! (This is a demo)')
 

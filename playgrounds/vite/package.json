@@ -17,7 +17,7 @@
     "tailwindcss": "4.1.18"
   },
   "devDependencies": {
-    "@javierscode/react-state-context": "*",
+    "react-selective-context": "*",
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "24.10.1",

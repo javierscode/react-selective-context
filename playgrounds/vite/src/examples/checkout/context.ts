@@ -1,11 +1,11 @@
 import {
-  createStateContext,
-  createStateSelector,
-  createStateMutation,
-} from '@javierscode/react-state-context'
+  createSelectiveContext,
+  createContextSelector,
+  createContextSetter,
+} from 'react-selective-context'
 import { CheckoutState } from './CheckoutState'
 
-export const CheckoutContext = createStateContext<CheckoutState>()
+export const CheckoutContext = createSelectiveContext<CheckoutState>()
 
-export const useCheckoutSelector = createStateSelector(CheckoutContext)
-export const useCheckoutMutation = createStateMutation(CheckoutContext)
+export const useCheckoutSelector = createContextSelector(CheckoutContext)
+export const useCheckoutSetter = createContextSetter(CheckoutContext)

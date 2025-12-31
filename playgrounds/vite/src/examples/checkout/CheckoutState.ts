@@ -89,3 +89,11 @@ export const removePromoCode = () => (prevState: CheckoutState) => ({
   promoCode: null,
   promoDiscount: 0,
 })
+
+export const updateCartItemQuantity =
+  (id: CartItem['id'], delta: number) => (prevState: CheckoutState) => ({
+    ...prevState,
+    items: prevState.items
+      .map((i) => (i.id === id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i))
+      .filter((i) => i.quantity > 0),
+  })
