@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 
-import { createStateContext } from '../src/createStateContext'
+import { createSelectiveContext } from '../src/createSelectiveContext'
 
-describe('createStateContext', () => {
+describe('createSelectiveContext', () => {
   it('should create a React context with null as default value', () => {
-    const context = createStateContext<{ count: number }>()
+    const context = createSelectiveContext<{ count: number }>()
 
     // The context should be a valid React context
     expect(context).toBeDefined()
@@ -14,3 +14,4 @@ describe('createStateContext', () => {
     expect(context._currentValue).toBe(null)
   })
 })
+

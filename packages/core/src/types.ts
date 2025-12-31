@@ -9,4 +9,4 @@ export type Store<TState> = {
   subscribe: (listener: Listener) => () => void
 }
 
-export type StateContext<TState> = React.Context<Store<TState> | null>
+export type SelectiveContext<TState> = React.Context<Store<TState> | null>

@@ -3,33 +3,33 @@ import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 
-import { useStateSelector } from '../src/useStateSelector'
-import { createStateContext } from '../src/createStateContext'
-import StateProvider from '../src/provider'
+import { useContextSelector } from '../src/useContextSelector'
+import { createSelectiveContext } from '../src/createSelectiveContext'
+import SelectiveProvider from '../src/provider'
 import { Store } from '../src/types'
 
-describe('useStateSelector', () => {
+describe('useContextSelector', () => {
   it('should throw error when used outside provider', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     expect(() => {
-      renderHook(() => useStateSelector(TestContext, (state) => state.count))
-    }).toThrow('useStateSelector must be used inside a StateProvider')
+      renderHook(() => useContextSelector(TestContext, (state) => state.count))
+    }).toThrow('useContextSelector must be used inside a SelectiveProvider')
   })
 
   it('should throw error when selector is not a function', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     expect(() => {
       renderHook(
         () =>
-          useStateSelector(
+          useContextSelector(
             TestContext,
             'not a function' as unknown as (state: { count: number }) => number
           ),
@@ -39,16 +39,16 @@ describe('useStateSelector', () => {
   })
 
   it('should return selected state slice', () => {
-    const TestContext = createStateContext<{ count: number; name: string }>()
+    const TestContext = createSelectiveContext<{ count: number; name: string }>()
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 42, name: 'test' }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 42, name: 'test' }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
-      () => useStateSelector(TestContext, (state) => state.count),
+      () => useContextSelector(TestContext, (state) => state.count),
       { wrapper }
     )
 
@@ -57,20 +57,20 @@ describe('useStateSelector', () => {
 
   it('should update when selected slice changes', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
     let storeRef: Store<TestState> | null = null
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
       () => {
         const store = useContext(TestContext)
         storeRef = store
-        return useStateSelector(TestContext, (state) => state.count)
+        return useContextSelector(TestContext, (state) => state.count)
       },
       { wrapper }
     )
@@ -85,17 +85,17 @@ describe('useStateSelector', () => {
   })
 
   it('should use custom compare function', () => {
-    const TestContext = createStateContext<{ items: number[] }>()
+    const TestContext = createSelectiveContext<{ items: number[] }>()
     const customCompare = vi.fn((a: number[], b: number[]) => a.length === b.length)
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ items: [1, 2, 3] }}>
+      <SelectiveProvider context={TestContext} initialState={{ items: [1, 2, 3] }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
-      () => useStateSelector(TestContext, (state) => state.items, customCompare),
+      () => useContextSelector(TestContext, (state) => state.items, customCompare),
       { wrapper }
     )
 
@@ -105,14 +105,14 @@ describe('useStateSelector', () => {
 
   it('should not re-render when selected slice is shallowEqual', () => {
     type TestState = { count: number; unrelated: string }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
     let storeRef: Store<TestState> | null = null
     let renderCount = 0
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 5, unrelated: 'a' }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 5, unrelated: 'a' }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
@@ -120,7 +120,7 @@ describe('useStateSelector', () => {
         renderCount++
         const store = useContext(TestContext)
         storeRef = store
-        return useStateSelector(TestContext, (state) => ({ count: state.count }))
+        return useContextSelector(TestContext, (state) => ({ count: state.count }))
       },
       { wrapper }
     )
@@ -141,20 +141,20 @@ describe('useStateSelector', () => {
 
   it('should update lastSlice ref when value changes', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
     let storeRef: Store<TestState> | null = null
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
       () => {
         const store = useContext(TestContext)
         storeRef = store
-        return useStateSelector(TestContext, (state) => state.count)
+        return useContextSelector(TestContext, (state) => state.count)
       },
       { wrapper }
     )
@@ -170,18 +170,18 @@ describe('useStateSelector', () => {
 
   it('should use server snapshot for SSR', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 42 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 42 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     // This test verifies the getServerSnapshot callback is created
     // The actual SSR behavior would need an SSR testing environment
     const { result } = renderHook(
-      () => useStateSelector(TestContext, (state) => state.count),
+      () => useContextSelector(TestContext, (state) => state.count),
       { wrapper }
     )
 
@@ -190,21 +190,22 @@ describe('useStateSelector', () => {
 
   it('should call getServerSnapshot during server rendering', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
 
     const Consumer = () => {
-      const count = useStateSelector(TestContext, (state) => state.count)
+      const count = useContextSelector(TestContext, (state) => state.count)
       return <div>{count}</div>
     }
 
     // Use renderToString to simulate SSR - this will call getServerSnapshot
     const html = renderToString(
-      <StateProvider context={TestContext} initialState={{ count: 777 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 777 }}>
         <Consumer />
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     // Verify the server-rendered HTML contains the initial count
     expect(html).toContain('777')
   })
 })
+

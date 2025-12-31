@@ -1,5 +1,5 @@
 {
-  "name": "@javierscode/react-state-context",
+  "name": "react-selective-context",
   "version": "1.0.0",
   "description": "Lightweight React state management with Context API and useSyncExternalStore",
   "type": "module",

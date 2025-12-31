@@ -2,48 +2,48 @@ import React, { useContext } from 'react'
 import { describe, it, expect } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 
-import { useStateMutation } from '../src/useStateMutation'
-import { createStateContext } from '../src/createStateContext'
-import StateProvider from '../src/provider'
+import { useContextSetter } from '../src/useContextSetter'
+import { createSelectiveContext } from '../src/createSelectiveContext'
+import SelectiveProvider from '../src/provider'
 import { Store } from '../src/types'
 
-describe('useStateMutation', () => {
+describe('useContextSetter', () => {
   it('should throw error when used outside provider', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     expect(() => {
-      renderHook(() => useStateMutation(TestContext))
-    }).toThrow('useStateMutation must be used inside a StateProvider')
+      renderHook(() => useContextSetter(TestContext))
+    }).toThrow('useContextSetter must be used inside a SelectiveProvider')
   })
 
   it('should return a mutate function', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
-    const { result } = renderHook(() => useStateMutation(TestContext), { wrapper })
+    const { result } = renderHook(() => useContextSetter(TestContext), { wrapper })
 
     expect(typeof result.current).toBe('function')
   })
 
   it('should update state with direct value', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
     let storeRef: Store<TestState> | null = null
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
       () => {
-        const mutate = useStateMutation(TestContext)
+        const mutate = useContextSetter(TestContext)
         const store = useContext(TestContext)
         storeRef = store
         return mutate
@@ -60,18 +60,18 @@ describe('useStateMutation', () => {
 
   it('should update state with updater function', () => {
     type TestState = { count: number }
-    const TestContext = createStateContext<TestState>()
+    const TestContext = createSelectiveContext<TestState>()
     let storeRef: Store<TestState> | null = null
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 10 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 10 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     const { result } = renderHook(
       () => {
-        const mutate = useStateMutation(TestContext)
+        const mutate = useContextSetter(TestContext)
         const store = React.useContext(TestContext)
         storeRef = store
         return mutate
@@ -87,15 +87,15 @@ describe('useStateMutation', () => {
   })
 
   it('should maintain stable mutate function reference', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         {children}
-      </StateProvider>
+      </SelectiveProvider>
     )
 
-    const { result, rerender } = renderHook(() => useStateMutation(TestContext), {
+    const { result, rerender } = renderHook(() => useContextSetter(TestContext), {
       wrapper,
     })
 
@@ -106,3 +106,4 @@ describe('useStateMutation', () => {
     expect(result.current).toBe(firstMutate)
   })
 })
+

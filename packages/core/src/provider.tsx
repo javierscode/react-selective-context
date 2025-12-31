@@ -3,17 +3,17 @@ import { useRef } from 'react'
 import { createStore } from './createStore'
 import { Store } from './types'
 
-export type StateContextProviderProps<TState> = {
+export type SelectiveProviderProps<TState> = {
   children: React.ReactNode
   initialState: TState
   context: React.Context<Store<TState> | null>
 }
 
-export default function StateProvider<TState>({
+export default function SelectiveProvider<TState>({
   children,
   initialState,
   context: StoreContext,
-}: StateContextProviderProps<TState>) {
+}: SelectiveProviderProps<TState>) {
   const storeRef = useRef<Store<TState> | null>(null)
   if (!storeRef.current) {
     storeRef.current = createStore(initialState)

@@ -2,13 +2,13 @@ import { useContext, useSyncExternalStore, useRef, useCallback } from 'react'
 import type { Selector, Store } from './types'
 import { shallowEqual } from './shallowEqual'
 
-export function useStateSelector<TState, TSlice>(
+export function useContextSelector<TState, TSlice>(
   context: React.Context<Store<TState> | null>,
   selector: Selector<TState, TSlice>,
   compare: (a: TSlice, b: TSlice) => boolean = shallowEqual
 ) {
   const store = useContext(context)
-  if (!store) throw new Error('useStateSelector must be used inside a StateProvider')
+  if (!store) throw new Error('useContextSelector must be used inside a SelectiveProvider')
 
   // Validate selector is a function
   if (typeof selector !== 'function') {
@@ -31,3 +31,4 @@ export function useStateSelector<TState, TSlice>(
 
   return useSyncExternalStore(store.subscribe, getSnapshot, getServerSnapshot)
 }
+

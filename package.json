@@ -1,5 +1,5 @@
 {
-  "name": "react-state-context-monorepo",
+  "name": "react-selective-context-monorepo",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -7,10 +7,10 @@
     "playgrounds/*"
   ],
   "scripts": {
-    "build": "npm -w @javierscode/react-state-context run build",
-    "test": "npm -w @javierscode/react-state-context run test",
-    "test:watch": "npm -w @javierscode/react-state-context run test:watch",
-    "test:coverage": "npm -w @javierscode/react-state-context run test:coverage",
+    "build": "npm -w react-selective-context run build",
+    "test": "npm -w react-selective-context run test",
+    "test:watch": "npm -w react-selective-context run test:watch",
+    "test:coverage": "npm -w react-selective-context run test:coverage",
     "format": "prettier --write .",
     "dev:vite": "npm -w vite run dev",
     "dev:next-js": "npm -w next-js run dev"

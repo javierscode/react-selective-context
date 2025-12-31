@@ -2,12 +2,12 @@ import React, { useContext } from 'react'
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 
-import StateProvider from '../src/provider'
-import { createStateContext } from '../src/createStateContext'
+import SelectiveProvider from '../src/provider'
+import { createSelectiveContext } from '../src/createSelectiveContext'
 
-describe('StateProvider', () => {
+describe('SelectiveProvider', () => {
   it('should provide the store to children', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
 
     const Consumer = () => {
       const store = useContext(TestContext)
@@ -15,16 +15,16 @@ describe('StateProvider', () => {
     }
 
     render(
-      <StateProvider context={TestContext} initialState={{ count: 42 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 42 }}>
         <Consumer />
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     expect(screen.getByTestId('value').textContent).toBe('42')
   })
 
   it('should create store only once across re-renders', () => {
-    const TestContext = createStateContext<{ count: number }>()
+    const TestContext = createSelectiveContext<{ count: number }>()
     let storeRef: unknown = null
 
     const Consumer = () => {
@@ -36,28 +36,28 @@ describe('StateProvider', () => {
     }
 
     const { rerender } = render(
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         <Consumer />
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     // Re-render the same component
     rerender(
-      <StateProvider context={TestContext} initialState={{ count: 0 }}>
+      <SelectiveProvider context={TestContext} initialState={{ count: 0 }}>
         <Consumer />
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     expect(screen.getByTestId('same').textContent).toBe('same')
   })
 
   it('should render children correctly', () => {
-    const TestContext = createStateContext<{ name: string }>()
+    const TestContext = createSelectiveContext<{ name: string }>()
 
     render(
-      <StateProvider context={TestContext} initialState={{ name: 'test' }}>
+      <SelectiveProvider context={TestContext} initialState={{ name: 'test' }}>
         <div data-testid='child'>Hello World</div>
-      </StateProvider>
+      </SelectiveProvider>
     )
 
     expect(screen.getByTestId('child').textContent).toBe('Hello World')

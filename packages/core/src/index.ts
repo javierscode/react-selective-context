@@ -1,10 +1,10 @@
-export { createStateContext } from './createStateContext'
-export { createStateSelector } from './createStateSelector'
-export { createStateMutation } from './createStateMutation'
+export { createSelectiveContext } from './createSelectiveContext'
+export { createContextSelector } from './createContextSelector'
+export { createContextSetter } from './createContextSetter'
 
-export { useStateSelector } from './useStateSelector'
-export { useStateMutation } from './useStateMutation'
+export { useContextSelector } from './useContextSelector'
+export { useContextSetter } from './useContextSetter'
 
-export { default as StateProvider } from './provider'
+export { default as SelectiveProvider } from './provider'
 
-export type { Selector, StateContext } from './types'
+export type { Selector, SelectiveContext } from './types'

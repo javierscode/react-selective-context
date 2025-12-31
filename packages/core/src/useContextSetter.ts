@@ -1,9 +1,9 @@
 import { useCallback, useContext } from 'react'
 import type { Store } from './types'
 
-export function useStateMutation<TState>(context: React.Context<Store<TState> | null>) {
+export function useContextSetter<TState>(context: React.Context<Store<TState> | null>) {
   const store = useContext(context)
-  if (!store) throw new Error('useStateMutation must be used inside a StateProvider')
+  if (!store) throw new Error('useContextSetter must be used inside a SelectiveProvider')
 
   const mutate = useCallback(
     (next: TState | ((prev: TState) => TState)) => {
@@ -20,3 +20,4 @@ export function useStateMutation<TState>(context: React.Context<Store<TState> | 
 
   return mutate
 }
+

@@ -1,4 +1,4 @@
-# react-state-context
+# react-selective-context
 
 Lightweight React state management library built on Context API and `useSyncExternalStore`. Type-safe, SSR-ready, and optimized for minimal re-renders.
 
@@ -31,7 +31,7 @@ This library shines when you have a **feature or section** of your app where:
 ## Installation
 
 ```bash
-npm install @javierscode/react-state-context
+npm install react-selective-context
 ```
 
 ## Quick Start
@@ -42,11 +42,11 @@ Let's build a checkout form where multiple nested components need access to cart
 
 ```tsx
 import {
-  createStateContext,
-  StateProvider,
-  createStateSelector,
-  createStateMutation,
-} from '@javierscode/react-state-context'
+  createSelectiveContext,
+  SelectiveProvider,
+  createContextSelector,
+  createContextSetter,
+} from 'react-selective-context'
 
 // Define your feature state type
 type CheckoutState = {
@@ -56,11 +56,11 @@ type CheckoutState = {
 }
 
 // Create a typed context for this feature
-const CheckoutContext = createStateContext<CheckoutState>()
+const CheckoutContext = createSelectiveContext<CheckoutState>()
 
 // Create hooks bound to this context
-const useCheckoutSelector = createStateSelector(CheckoutContext)
-const useCheckoutMutation = createStateMutation(CheckoutContext)
+const useCheckoutSelector = createContextSelector(CheckoutContext)
+const useCheckoutSetter = createContextSetter(CheckoutContext)
 ```
 
 ### 2. Wrap your feature with the provider
@@ -74,7 +74,7 @@ function CheckoutPage() {
   }
 
   return (
-    <StateProvider context={CheckoutContext} initialState={initialState}>
+    <SelectiveProvider context={CheckoutContext} initialState={initialState}>
       <CheckoutLayout>
         {/* These components can be deeply nested - no prop drilling needed */}
         <CartSummary />
@@ -82,7 +82,7 @@ function CheckoutPage() {
         <PromoCodeInput />
         <OrderTotal />
       </CheckoutLayout>
-    </StateProvider>
+    </SelectiveProvider>
   )
 }
 ```
@@ -113,16 +113,16 @@ function ShippingAddressPreview() {
 }
 ```
 
-### 4. Use mutations to update state (from anywhere)
+### 4. Use setters to update state (from anywhere)
 
 ```tsx
 // Deeply nested in the shipping form
 function ShippingAddressInput() {
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
   const address = useCheckoutSelector((state) => state.shipping.address)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    mutate((prev) => ({
+    setCheckoutState((prev) => ({
       ...prev,
       shipping: { ...prev.shipping, address: e.target.value },
     }))
@@ -133,10 +133,10 @@ function ShippingAddressInput() {
 
 // In a completely different branch of the component tree
 function ApplyPromoButton({ code }: { code: string }) {
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
 
   const applyPromo = () => {
-    mutate((prev) => ({ ...prev, promoCode: code }))
+    setCheckoutState((prev) => ({ ...prev, promoCode: code }))
   }
 
   return <button onClick={applyPromo}>Apply</button>
@@ -145,87 +145,87 @@ function ApplyPromoButton({ code }: { code: string }) {
 
 ## API Reference
 
-### `createStateContext<TState>()`
+### `createSelectiveContext<TState>()`
 
 Creates a typed React Context for your feature state.
 
 ```tsx
-const CheckoutContext = createStateContext<CheckoutState>()
+const CheckoutContext = createSelectiveContext<CheckoutState>()
 ```
 
-### `StateProvider`
+### `SelectiveProvider`
 
 Provider component that initializes and manages the store for a specific section of your app.
 
 ```tsx
-<StateProvider context={CheckoutContext} initialState={initialCheckoutState}>
+<SelectiveProvider context={CheckoutContext} initialState={initialCheckoutState}>
   <CheckoutFlow />
-</StateProvider>
+</SelectiveProvider>
 ```
 
 **Props:**
 | Prop | Type | Description |
 |------|------|-------------|
-| `context` | `StateContext<TState>` | The context created by `createStateContext` |
+| `context` | `SelectiveContext<TState>` | The context created by `createSelectiveContext` |
 | `initialState` | `TState` | The initial state value |
 | `children` | `ReactNode` | Child components |
 
-### `useStateSelector(context, selector, compare?)`
+### `useContextSelector(context, selector, compare?)`
 
 Hook to select and subscribe to a slice of state.
 
 ```tsx
-const shipping = useStateSelector(CheckoutContext, (state) => state.shipping)
+const shipping = useContextSelector(CheckoutContext, (state) => state.shipping)
 ```
 
 **Parameters:**
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `context` | `StateContext<TState>` | The state context |
+| `context` | `SelectiveContext<TState>` | The state context |
 | `selector` | `(state: TState) => TSlice` | Function to select a slice of state |
 | `compare` | `(a: TSlice, b: TSlice) => boolean` | Optional comparison function (defaults to shallow equality) |
 
-### `useStateMutation(context)`
+### `useContextSetter(context)`
 
-Hook to get a mutation function for updating state.
+Hook to get a setter function for updating state.
 
 ```tsx
-const mutate = useStateMutation(CheckoutContext)
+const setState = useContextSetter(CheckoutContext)
 
 // Update with a function (recommended)
-mutate((prev) => ({ ...prev, promoCode: 'SAVE20' }))
+setState((prev) => ({ ...prev, promoCode: 'SAVE20' }))
 
 // Or update with a new state object
-mutate({ ...newState })
+setState({ ...newState })
 ```
 
-### `createStateSelector(context)`
+### `createContextSelector(context)`
 
 Factory function that creates a pre-bound selector hook for a specific context. Recommended for cleaner component code.
 
 ```tsx
-const useCheckoutSelector = createStateSelector(CheckoutContext)
+const useCheckoutSelector = createContextSelector(CheckoutContext)
 
 // Later in components:
 const items = useCheckoutSelector((state) => state.items)
 ```
 
-### `createStateMutation(context)`
+### `createContextSetter(context)`
 
-Factory function that creates a pre-bound mutation hook for a specific context. Recommended for cleaner component code.
+Factory function that creates a pre-bound setter hook for a specific context. Recommended for cleaner component code.
 
 ```tsx
-const useCheckoutMutation = createStateMutation(CheckoutContext)
+const useCheckoutSetter = createContextSetter(CheckoutContext)
 
 // Later in components:
-const mutate = useCheckoutMutation()
+const setCheckoutState = useCheckoutSetter()
 ```
 
 ## Advanced Usage
 
 ### Custom Comparison Function
 
-By default, `useStateSelector` uses shallow equality to determine if the selected value has changed. You can provide a custom comparison function:
+By default, `useContextSelector` uses shallow equality to determine if the selected value has changed. You can provide a custom comparison function:
 
 ```tsx
 // Deep equality for complex nested objects
@@ -245,30 +245,30 @@ You can create separate contexts for different parts of your application. Each f
 ```tsx
 // features/checkout/context.ts
 type CheckoutState = { items: CartItem[]; shipping: ShippingInfo }
-export const CheckoutContext = createStateContext<CheckoutState>()
-export const useCheckoutSelector = createStateSelector(CheckoutContext)
-export const useCheckoutMutation = createStateMutation(CheckoutContext)
+export const CheckoutContext = createSelectiveContext<CheckoutState>()
+export const useCheckoutSelector = createContextSelector(CheckoutContext)
+export const useCheckoutSetter = createContextSetter(CheckoutContext)
 
 // features/user-settings/context.ts
 type SettingsState = { theme: 'light' | 'dark'; notifications: boolean }
-export const SettingsContext = createStateContext<SettingsState>()
-export const useSettingsSelector = createStateSelector(SettingsContext)
-export const useSettingsMutation = createStateMutation(SettingsContext)
+export const SettingsContext = createSelectiveContext<SettingsState>()
+export const useSettingsSelector = createContextSelector(SettingsContext)
+export const useSettingsSetter = createContextSetter(SettingsContext)
 
 // Each feature wraps only its own section
 function CheckoutPage() {
   return (
-    <StateProvider context={CheckoutContext} initialState={checkoutInitialState}>
+    <SelectiveProvider context={CheckoutContext} initialState={checkoutInitialState}>
       <CheckoutFlow />
-    </StateProvider>
+    </SelectiveProvider>
   )
 }
 
 function SettingsPanel() {
   return (
-    <StateProvider context={SettingsContext} initialState={settingsInitialState}>
+    <SelectiveProvider context={SettingsContext} initialState={settingsInitialState}>
       <SettingsForm />
-    </StateProvider>
+    </SelectiveProvider>
   )
 }
 ```
@@ -283,26 +283,26 @@ type CheckoutState = {
   promoCode: string | null
 }
 
-const CheckoutContext = createStateContext<CheckoutState>()
-const useCheckoutSelector = createStateSelector(CheckoutContext)
-const useCheckoutMutation = createStateMutation(CheckoutContext)
+const CheckoutContext = createSelectiveContext<CheckoutState>()
+const useCheckoutSelector = createContextSelector(CheckoutContext)
+const useCheckoutSetter = createContextSetter(CheckoutContext)
 
 // ✅ Type-safe selector
 const items = useCheckoutSelector((state) => state.items) // type: Array<{ id: string; price: number }>
 const promoCode = useCheckoutSelector((state) => state.promoCode) // type: string | null
 
-// ✅ Type-safe mutations
-const mutate = useCheckoutMutation()
-mutate((prev) => ({ ...prev, promoCode: 'SAVE20' })) // ✓ valid
-mutate((prev) => ({ ...prev, invalid: true })) // ✗ TypeScript error
+// ✅ Type-safe setters
+const setState = useCheckoutSetter()
+setCheckoutState((prev) => ({ ...prev, promoCode: 'SAVE20' })) // ✓ valid
+setCheckoutState((prev) => ({ ...prev, invalid: true })) // ✗ TypeScript error
 ```
 
 ## How It Works
 
 This library combines React's Context API with `useSyncExternalStore` to provide efficient state management:
 
-1. **Store Creation** — When `StateProvider` mounts, it creates a store with `getState`, `setState`, and `subscribe` methods
-2. **Subscription** — `useStateSelector` subscribes to the store using `useSyncExternalStore`
+1. **Store Creation** — When `SelectiveProvider` mounts, it creates a store with `getState`, `setState`, and `subscribe` methods
+2. **Subscription** — `useContextSelector` subscribes to the store using `useSyncExternalStore`
 3. **Selective Updates** — The selector function extracts only the needed state slice
 4. **Shallow Comparison** — Changes are detected using shallow equality, preventing unnecessary re-renders
 5. **SSR Support** — `getServerSnapshot` provides a consistent snapshot during server-side rendering
