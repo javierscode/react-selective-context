@@ -4,7 +4,7 @@ export function Header() {
   return (
     <header className='mb-12 text-center'>
       <h1 className='mb-4 text-4xl font-bold tracking-tight text-slate-100 md:text-5xl'>
-        react-state-context
+        react-selective-context
       </h1>
       <p className='mx-auto max-w-2xl text-lg text-slate-400 text-balance'>
         Lightweight state management for React. Perfect for managing state in{' '}

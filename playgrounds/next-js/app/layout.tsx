@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'react-state-context | Next.js Playground',
+  title: 'react-selective-context | Next.js Playground',
   description:
     'Lightweight state management for React with App Router and Server Components',
 }

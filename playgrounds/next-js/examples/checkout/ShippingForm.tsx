@@ -2,18 +2,18 @@
 
 import { useCallback } from 'react'
 import { updateShippingField, updateStep } from './CheckoutState'
-import { useCheckoutSelector, useCheckoutMutation } from './context'
+import { useCheckoutSelector, useCheckoutSetter } from './context'
 import { InputField } from './InputField'
 
 export function ShippingForm() {
   const step = useCheckoutSelector((state) => state.step)
   const shipping = useCheckoutSelector((state) => state.shipping)
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
 
   const updateField = useCallback(
     (field: keyof typeof shipping, value: string) =>
-      mutate(updateShippingField(field, value)),
-    [mutate]
+      setCheckoutState(updateShippingField(field, value)),
+    [setCheckoutState]
   )
 
   const updateFullName = useCallback(
@@ -41,9 +41,9 @@ export function ShippingForm() {
     [updateField]
   )
 
-  const goBack = () => mutate(updateStep('cart'))
+  const goBack = () => setCheckoutState(updateStep('cart'))
 
-  const goToConfirmation = () => mutate(updateStep('confirmation'))
+  const goToConfirmation = () => setCheckoutState(updateStep('confirmation'))
 
   const isValid = Object.values(shipping).every((v) => v.trim() !== '')
 
@@ -110,4 +110,3 @@ export function ShippingForm() {
     </div>
   )
 }
-

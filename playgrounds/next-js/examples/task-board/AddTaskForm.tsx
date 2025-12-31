@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTaskBoardMutation } from './context'
+import { useTaskBoardSetter } from './context'
 import { addTask, type Task } from './TaskBoardState'
 
 type AddTaskFormState = {
@@ -11,7 +11,7 @@ type AddTaskFormState = {
 }
 
 export function AddTaskForm() {
-  const mutate = useTaskBoardMutation()
+  const setTaskBoardState = useTaskBoardSetter()
   const [{ title, priority, isOpen }, setState] = useState<AddTaskFormState>({
     title: '',
     priority: 'medium',
@@ -29,7 +29,7 @@ export function AddTaskForm() {
       priority,
     }
 
-    mutate(addTask(newTask))
+    setTaskBoardState(addTask(newTask))
     setState({ title: '', priority: 'medium', isOpen: false })
   }
 
@@ -117,4 +117,3 @@ export function AddTaskForm() {
     </form>
   )
 }
-

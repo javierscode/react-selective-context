@@ -4,12 +4,12 @@ export function Footer() {
       <p className='text-slate-500'>
         Built with{' '}
         <a
-          href='https://github.com/javierscode/react-state-context'
+          href='https://github.com/javierscode/react-selective-context'
           className='text-slate-400 underline hover:text-slate-200'
           target='_blank'
           rel='noopener noreferrer'
         >
-          @javierscode/react-state-context
+          react-selective-context
         </a>
       </p>
       <p className='mt-2 text-sm text-slate-600'>

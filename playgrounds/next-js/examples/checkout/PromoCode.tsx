@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useCheckoutSelector, useCheckoutMutation } from './context'
+import { useCheckoutSelector, useCheckoutSetter } from './context'
 import { addPromoCode, checkValidPromoCode, removePromoCode } from './CheckoutState'
 
 type PromoCodeState = {
@@ -11,7 +11,7 @@ type PromoCodeState = {
 
 export function PromoCode() {
   const promoCode = useCheckoutSelector((state) => state.promoCode)
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
   const [state, setState] = useState<PromoCodeState>({
     input: '',
     error: '',
@@ -20,14 +20,14 @@ export function PromoCode() {
   const applyCode = () => {
     const code = state.input.toUpperCase().trim()
     if (checkValidPromoCode(code)) {
-      mutate(addPromoCode(code))
+      setCheckoutState(addPromoCode(code))
       setState({ input: '', error: '' })
     } else {
       setState({ input: '', error: 'Invalid promo code' })
     }
   }
 
-  const removeCode = () => mutate(removePromoCode())
+  const removeCode = () => setCheckoutState(removePromoCode())
 
   if (promoCode) {
     return (
@@ -77,4 +77,3 @@ export function PromoCode() {
     </div>
   )
 }
-

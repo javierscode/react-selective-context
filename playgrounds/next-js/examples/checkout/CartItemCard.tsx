@@ -1,7 +1,7 @@
 'use client'
 
-import { useCheckoutMutation } from './context'
-import { type CartItem } from './CheckoutState'
+import { useCheckoutSetter } from './context'
+import { updateCartItemQuantity, type CartItem } from './CheckoutState'
 import { memo } from 'react'
 
 type CartItemCardProps = {
@@ -9,18 +9,10 @@ type CartItemCardProps = {
 }
 
 export const CartItemCard = memo(function CartItemCard({ item }: CartItemCardProps) {
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
 
-  const updateQuantity = (delta: number) => {
-    mutate((prev) => ({
-      ...prev,
-      items: prev.items
-        .map((i) =>
-          i.id === item.id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i
-        )
-        .filter((i) => i.quantity > 0),
-    }))
-  }
+  const updateQuantity = (delta: number) =>
+    setCheckoutState(updateCartItemQuantity(item.id, delta))
 
   return (
     <div

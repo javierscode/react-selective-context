@@ -19,7 +19,7 @@ export default function Home() {
             <span className='font-semibold text-slate-100'>No prop drilling!</span> Each
             example below wraps a section of the app with{' '}
             <code className='rounded-sm bg-slate-800 px-2 py-0.5 text-sm text-slate-300'>
-              StateProvider
+              SelectiveProvider
             </code>
             . Components at any nesting depth can access and update the shared state
             directly.

@@ -1,6 +1,6 @@
 'use client'
 
-import { useTaskBoardMutation } from './context'
+import { useTaskBoardSetter } from './context'
 import { deleteTask, updateTaskStatus, type Task } from './TaskBoardState'
 import { memo } from 'react'
 
@@ -9,7 +9,7 @@ type TaskCardProps = {
 }
 
 export const TaskCard = memo(function TaskCard({ task }: TaskCardProps) {
-  const mutate = useTaskBoardMutation()
+  const setTaskBoardState = useTaskBoardSetter()
 
   const statusColors = {
     todo: 'border-l-slate-500',
@@ -26,9 +26,9 @@ export const TaskCard = memo(function TaskCard({ task }: TaskCardProps) {
   const statusOptions: Task['status'][] = ['todo', 'in-progress', 'done']
 
   const handleUpdateTaskStatus = (newStatus: Task['status']) =>
-    mutate(updateTaskStatus(task.id, newStatus))
+    setTaskBoardState(updateTaskStatus(task.id, newStatus))
 
-  const handleDeleteTask = () => mutate(deleteTask(task.id))
+  const handleDeleteTask = () => setTaskBoardState(deleteTask(task.id))
 
   return (
     <div

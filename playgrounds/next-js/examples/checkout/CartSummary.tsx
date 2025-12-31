@@ -1,17 +1,17 @@
 'use client'
 
-import { useCheckoutSelector, useCheckoutMutation } from './context'
+import { useCheckoutSelector, useCheckoutSetter } from './context'
 import { CartItemCard } from './CartItemCard'
 import { updateStep } from './CheckoutState'
 
 export function CartSummary() {
   const items = useCheckoutSelector((state) => state.items)
   const step = useCheckoutSelector((state) => state.step)
-  const mutate = useCheckoutMutation()
+  const setCheckoutState = useCheckoutSetter()
 
   if (step !== 'cart') return null
 
-  const goToShipping = () => mutate(updateStep('shipping'))
+  const goToShipping = () => setCheckoutState(updateStep('shipping'))
 
   return (
     <div className='space-y-4'>
@@ -33,4 +33,3 @@ export function CartSummary() {
     </div>
   )
 }
-
