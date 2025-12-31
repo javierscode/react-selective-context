@@ -1,5 +1,9 @@
 # react-selective-context
 
+[![npm version](https://img.shields.io/npm/v/react-selective-context.svg)](https://www.npmjs.com/package/react-selective-context)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/react-selective-context)](https://bundlephobia.com/package/react-selective-context)
+[![license](https://img.shields.io/npm/l/react-selective-context.svg)](https://github.com/javierscode/react-selective-context/blob/main/LICENSE)
+
 Lightweight React state management library built on Context API and `useSyncExternalStore`. Type-safe, SSR-ready, and optimized for minimal re-renders.
 
 Perfect for managing state in specific sections of your app without prop drilling through multiple component layers.
