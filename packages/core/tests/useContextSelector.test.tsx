@@ -110,7 +110,10 @@ describe('useContextSelector', () => {
     let renderCount = 0
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <SelectiveProvider context={TestContext} initialState={{ count: 5, unrelated: 'a' }}>
+      <SelectiveProvider
+        context={TestContext}
+        initialState={{ count: 5, unrelated: 'a' }}
+      >
         {children}
       </SelectiveProvider>
     )
@@ -207,5 +210,43 @@ describe('useContextSelector', () => {
     // Verify the server-rendered HTML contains the initial count
     expect(html).toContain('777')
   })
-})
 
+  it('should only re-render once when multiple setState calls are batched', () => {
+    type TestState = { count: number; value: number }
+    const TestContext = createSelectiveContext<TestState>()
+    let storeRef: Store<TestState> | null = null
+    let renderCount = 0
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <SelectiveProvider context={TestContext} initialState={{ count: 0, value: 0 }}>
+        {children}
+      </SelectiveProvider>
+    )
+
+    const { result } = renderHook(
+      () => {
+        renderCount++
+        const store = useContext(TestContext)
+        storeRef = store
+        return useContextSelector(TestContext, (state) => state.count + state.value)
+      },
+      { wrapper }
+    )
+
+    expect(result.current).toBe(0)
+    const initialRenderCount = renderCount
+
+    // Multiple setState calls within the same act() should be batched by React
+    act(() => {
+      storeRef?.setState({ count: 1, value: 0 })
+      storeRef?.setState({ count: 2, value: 0 })
+      storeRef?.setState({ count: 3, value: 0 })
+      storeRef?.setState({ count: 5, value: 5 })
+    })
+
+    // Should have the final value
+    expect(result.current).toBe(10)
+    // Should only re-render once due to React's batching
+    expect(renderCount).toBe(initialRenderCount + 1)
+  })
+})
