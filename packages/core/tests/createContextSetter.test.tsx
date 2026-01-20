@@ -22,4 +22,3 @@ describe('createContextSetter', () => {
     expect(typeof result.current).toBe('function')
   })
 })
-

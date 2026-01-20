@@ -1,2 +1,1 @@
 export { Checkout } from './Checkout'
-

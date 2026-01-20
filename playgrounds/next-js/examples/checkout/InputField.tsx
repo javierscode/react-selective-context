@@ -32,4 +32,3 @@ export const InputField = memo(function InputField({
     </div>
   )
 })
-

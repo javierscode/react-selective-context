@@ -106,4 +106,3 @@ describe('useContextSetter', () => {
     expect(result.current).toBe(firstMutate)
   })
 })
-

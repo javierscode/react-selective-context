@@ -8,7 +8,8 @@ export function useContextSelector<TState, TSlice>(
   compare: (a: TSlice, b: TSlice) => boolean = shallowEqual
 ) {
   const store = useContext(context)
-  if (!store) throw new Error('useContextSelector must be used inside a SelectiveProvider')
+  if (!store)
+    throw new Error('useContextSelector must be used inside a SelectiveProvider')
 
   // Validate selector is a function
   if (typeof selector !== 'function') {
@@ -31,4 +32,3 @@ export function useContextSelector<TState, TSlice>(
 
   return useSyncExternalStore(store.subscribe, getSnapshot, getServerSnapshot)
 }
-
