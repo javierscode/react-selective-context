@@ -5,4 +5,3 @@ export function createContextSelector<TState>(context: SelectiveContext<TState>)
   return <TSlice>(selector: Selector<TState, TSlice>) =>
     useContextSelector(context, selector)
 }
-

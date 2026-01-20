@@ -20,4 +20,3 @@ export function useContextSetter<TState>(context: React.Context<Store<TState> | 
 
   return mutate
 }
-

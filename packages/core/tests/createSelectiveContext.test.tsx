@@ -14,4 +14,3 @@ describe('createSelectiveContext', () => {
     expect(context._currentValue).toBe(null)
   })
 })
-

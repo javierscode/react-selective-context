@@ -24,4 +24,3 @@ describe('createContextSelector', () => {
     expect(result.current).toBe(42)
   })
 })
-

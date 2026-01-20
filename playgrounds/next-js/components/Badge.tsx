@@ -14,4 +14,3 @@ export function Badge({ icon, label }: BadgeProps) {
     </span>
   )
 }
-

@@ -52,4 +52,3 @@ export const addTask = (task: Task) => (prevState: TaskBoardState) => ({
   ...prevState,
   tasks: [...prevState.tasks, task],
 })
-
